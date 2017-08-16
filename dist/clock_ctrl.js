@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['app/plugins/sdk', 'moment', 'lodash', './css/clock-panel.css!'], function (_export, _context) {
+  "use strict";
+
   var PanelCtrl, moment, _, _createClass, panelDefaults, ClockCtrl;
 
   function _classCallCheck(instance, Constructor) {
@@ -89,7 +91,7 @@ System.register(['app/plugins/sdk', 'moment', 'lodash', './css/clock-panel.css!'
         function ClockCtrl($scope, $injector) {
           _classCallCheck(this, ClockCtrl);
 
-          var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ClockCtrl).call(this, $scope, $injector));
+          var _this = _possibleConstructorReturn(this, (ClockCtrl.__proto__ || Object.getPrototypeOf(ClockCtrl)).call(this, $scope, $injector));
 
           _.defaultsDeep(_this.panel, panelDefaults);
 
@@ -98,108 +100,14 @@ System.register(['app/plugins/sdk', 'moment', 'lodash', './css/clock-panel.css!'
           }
 
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
-          _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
           _this.events.on('panel-initialized', _this.render.bind(_this));
-
-          _this.updateClock();
           return _this;
         }
 
         _createClass(ClockCtrl, [{
           key: 'onInitEditMode',
           value: function onInitEditMode() {
-            this.addEditorTab('Options', 'public/plugins/grafana-clock-panel/editor.html', 2);
-          }
-        }, {
-          key: 'onPanelTeardown',
-          value: function onPanelTeardown() {
-            this.$timeout.cancel(this.nextTickPromise);
-          }
-        }, {
-          key: 'updateClock',
-          value: function updateClock() {
-            if (this.panel.mode === 'time') {
-              this.renderTime();
-            } else {
-              this.renderCountdown();
-            }
-
-            this.nextTickPromise = this.$timeout(this.updateClock.bind(this), 1000);
-          }
-        }, {
-          key: 'renderTime',
-          value: function renderTime() {
-            var now = void 0;
-
-            if (this.panel.offsetFromUtc && this.panel.offsetFromUtcMinutes) {
-              var offsetInMinutes = parseInt(this.panel.offsetFromUtc, 10) * 60 + parseInt(this.panel.offsetFromUtcMinutes, 10);
-              now = moment().utcOffset(offsetInMinutes);
-            } else if (this.panel.offsetFromUtc && !this.panel.offsetFromUtcMinutes) {
-              now = moment().utcOffset(parseInt(this.panel.offsetFromUtc, 10));
-            } else {
-              now = moment();
-            }
-
-            if (this.panel.dateSettings.showDate) {
-              this.date = now.format(this.panel.dateSettings.dateFormat);
-            }
-
-            this.time = now.format(this.getTimeFormat());
-          }
-        }, {
-          key: 'getTimeFormat',
-          value: function getTimeFormat() {
-            if (this.panel.clockType === '24 hour') {
-              return 'HH:mm:ss';
-            }
-
-            if (this.panel.clockType === '12 hour') {
-              return 'h:mm:ss A';
-            }
-
-            return this.panel.timeSettings.customFormat;
-          }
-        }, {
-          key: 'renderCountdown',
-          value: function renderCountdown() {
-            if (!this.panel.countdownSettings.endCountdownTime) {
-              this.time = this.panel.countdownSettings.endText;
-            }
-
-            var now = moment();
-            var timeLeft = moment.duration(moment(this.panel.countdownSettings.endCountdownTime).diff(now));
-            var formattedTimeLeft = '';
-
-            if (timeLeft.asSeconds() <= 0) {
-              this.time = this.panel.countdownSettings.endText;
-              return;
-            }
-
-            var previous = '';
-
-            if (timeLeft.years() > 0) {
-              formattedTimeLeft = timeLeft.years() === 1 ? '1 year, ' : timeLeft.years() + ' years, ';
-              previous = 'years';
-            }
-            if (timeLeft.months() > 0 || previous === 'years') {
-              formattedTimeLeft += timeLeft.months() === 1 ? '1 month, ' : timeLeft.months() + ' months, ';
-              previous = 'month';
-            }
-            if (timeLeft.days() > 0 || previous === 'months') {
-              formattedTimeLeft += timeLeft.days() === 1 ? '1 day, ' : timeLeft.days() + ' days, ';
-              previous = 'days';
-            }
-            if (timeLeft.hours() > 0 || previous === 'days') {
-              formattedTimeLeft += timeLeft.hours() === 1 ? '1 hour, ' : timeLeft.hours() + ' hours, ';
-              previous = 'hours';
-            }
-
-            if (timeLeft.minutes() > 0 || previous === 'hours') {
-              formattedTimeLeft += timeLeft.minutes() === 1 ? '1 minute, ' : timeLeft.minutes() + ' minutes, ';
-            }
-
-            formattedTimeLeft += timeLeft.seconds() === 1 ? '1 second ' : timeLeft.seconds() + ' seconds';
-            this.time = formattedTimeLeft;
+            this.addEditorTab('Options', 'public/plugins/nayar-divider-panel/editor.html', 2);
           }
         }, {
           key: 'link',
